@@ -2,14 +2,14 @@
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-auto-flow: dense;
   gap: 20px;
 }
 
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
+/* Highly rated films take a 2x2 tile; dense packing backfills the gaps. */
+.featured {
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
 .list {
@@ -18,4 +18,11 @@
   flex-direction: column;
   gap: 14px;
   max-width: 900px;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
 }

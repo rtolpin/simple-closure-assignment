@@ -25,7 +25,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <ViewToggle query={query} />
         </div>
       </header>
-      {movies.length > 0 ? <MovieGrid movies={movies} view={query.view} /> : <EmptyState />}
+      {movies.length > 0 ? (
+        <MovieGrid movies={movies} view={query.view} sizeByRating={query.sort !== "rating"} />
+      ) : (
+        <EmptyState />
+      )}
     </main>
   );
 }

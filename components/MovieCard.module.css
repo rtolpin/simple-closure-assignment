@@ -108,6 +108,44 @@
   font-weight: 600;
 }
 
+/* Featured (2x2) tile: stretch to fill the cell and let the poster flex,
+   since a doubled 2:3 poster doesn't line up with two rows of cards. */
+.featured {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.featured .poster {
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+
+.featured .name {
+  font-size: 1.15rem;
+}
+
+.featured .overview {
+  font-size: 0.95rem;
+  -webkit-line-clamp: 8;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #111;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* List layout: poster on the left, details and synopsis on the right. */
 .row {
   display: grid;

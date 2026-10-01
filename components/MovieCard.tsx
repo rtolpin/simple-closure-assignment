@@ -7,28 +7,38 @@ import styles from "./MovieCard.module.css";
 type Props = {
   movie: Movie;
   view?: View;
+  featured?: boolean;
   eager?: boolean;
 };
 
-export function MovieCard({ movie, view = "grid", eager = false }: Props) {
+export function MovieCard({ movie, view = "grid", featured = false, eager = false }: Props) {
   const year = movie.release_date?.slice(0, 4);
   const isList = view === "list";
 
   return (
     <a
-      className={`${styles.card} ${isList ? styles.row : ""}`}
+      className={[styles.card, isList && styles.row, featured && styles.featured]
+        .filter(Boolean)
+        .join(" ")}
       href={`https://www.themoviedb.org/movie/${movie.id}`}
       target="_blank"
       rel="noopener noreferrer"
     >
       <div className={styles.poster}>
+        {featured && <span className={styles.badge}>Top rated</span>}
         {movie.poster_path ? (
           <Image
             className={styles.image}
             src={posterUrl(movie.poster_path)}
             alt={`${movie.title} poster`}
             fill
-            sizes={isList ? "120px" : "(max-width: 480px) 50vw, (max-width: 1024px) 25vw, 240px"}
+            sizes={
+              isList
+                ? "120px"
+                : featured
+                  ? "(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 480px"
+                  : "(max-width: 480px) 50vw, (max-width: 1024px) 25vw, 240px"
+            }
             loading={eager ? "eager" : "lazy"}
           />
         ) : (
