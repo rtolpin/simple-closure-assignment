@@ -1,4 +1,5 @@
 import { Controls } from "@/components/Controls";
+import { EmptyState } from "@/components/EmptyState";
 import { MovieGrid } from "@/components/MovieGrid";
 import { parseQuery, toDiscoverParams } from "@/lib/params";
 import { discoverMovies, getGenres } from "@/lib/tmdb";
@@ -20,7 +21,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </div>
         <Controls key={`${query.sort}-${query.genre}`} query={query} genres={genres} />
       </header>
-      <MovieGrid movies={movies} />
+      {movies.length > 0 ? <MovieGrid movies={movies} /> : <EmptyState />}
     </main>
   );
 }
