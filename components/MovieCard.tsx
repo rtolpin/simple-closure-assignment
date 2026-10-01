@@ -12,7 +12,12 @@ export function MovieCard({ movie, eager = false }: Props) {
   const year = movie.release_date?.slice(0, 4);
 
   return (
-    <article className={styles.card}>
+    <a
+      className={styles.card}
+      href={`https://www.themoviedb.org/movie/${movie.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className={styles.poster}>
         {movie.poster_path ? (
           <Image
@@ -28,6 +33,10 @@ export function MovieCard({ movie, eager = false }: Props) {
             {movie.title}
           </div>
         )}
+        <div className={styles.overlay} aria-hidden="true">
+          <p className={styles.overview}>{movie.overview || "No synopsis available."}</p>
+          <span className={styles.votes}>{movie.vote_count.toLocaleString()} votes</span>
+        </div>
       </div>
       <div className={styles.info}>
         <h2 className={styles.name}>{movie.title}</h2>
@@ -36,6 +45,6 @@ export function MovieCard({ movie, eager = false }: Props) {
           <span className={styles.rating}>★ {movie.vote_average.toFixed(1)}</span>
         </div>
       </div>
-    </article>
+    </a>
   );
 }

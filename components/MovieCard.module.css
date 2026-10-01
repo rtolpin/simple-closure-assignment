@@ -3,16 +3,71 @@
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--surface);
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    outline-color 200ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgb(0 0 0 / 0.5);
+}
+
+.card:focus-visible {
+  outline-color: var(--accent);
 }
 
 .poster {
   position: relative;
+  overflow: hidden;
   aspect-ratio: 2 / 3;
   background: var(--surface-2);
 }
 
 .image {
   object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.card:hover .image,
+.card:focus-visible .image {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.92) 10%, rgb(0 0 0 / 0.6) 55%, transparent);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.card:hover .overlay,
+.card:focus-visible .overlay {
+  opacity: 1;
+}
+
+.overview {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.votes {
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
 .placeholder {
@@ -51,4 +106,19 @@
 .rating {
   color: var(--accent);
   font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image,
+  .overlay {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:focus-visible,
+  .card:hover .image,
+  .card:focus-visible .image {
+    transform: none;
+  }
 }
