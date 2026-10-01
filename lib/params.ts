@@ -1,0 +1,64 @@
+// Pure helpers that turn URL search params into validated TMDB query params.
+// Kept free of server/client imports so they can be unit tested directly.
+
+type ParamValue = string | string[] | undefined;
+
+export type SearchParams = { [key: string]: ParamValue };
+
+// minVotes: without a vote floor, rating and title sorts are dominated by films
+// with a handful of votes. TMDB's own Top Rated list uses vote_count >= 200.
+export const SORT_OPTIONS = {
+  popular: { label: "Most popular", sortBy: "popularity.desc" },
+  rating: { label: "Highest rated", sortBy: "vote_average.desc", minVotes: 200 },
+  newest: { label: "Newest releases", sortBy: "primary_release_date.desc", minVotes: 20 },
+  title: { label: "Title (A–Z)", sortBy: "title.asc", minVotes: 200 },
+} as const satisfies Record<string, { label: string; sortBy: string; minVotes?: number }>;
+
+export type SortKey = keyof typeof SORT_OPTIONS;
+
+export const DEFAULT_SORT: SortKey = "popular";
+
+export type Query = { sort: SortKey; genre: number | null };
+
+// Repeated params (?genre=1&genre=2) arrive as arrays; use the first.
+function first(value: ParamValue): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export function parseSort(value: ParamValue): SortKey {
+  const v = first(value);
+  return v && Object.hasOwn(SORT_OPTIONS, v) ? (v as SortKey) : DEFAULT_SORT;
+}
+
+// Genre IDs are positive integers. A strict pattern rejects things Number()
+// would accept ("", "1e3", "0x1C", " 28 ") and keeps TMDB's "," / "|"
+// filter syntax out of with_genres.
+export function parseGenre(value: ParamValue): number | null {
+  const v = first(value);
+  return v && /^[1-9]\d{0,5}$/.test(v) ? Number(v) : null;
+}
+
+export function parseQuery(params: SearchParams): Query {
+  return { sort: parseSort(params.sort), genre: parseGenre(params.genre) };
+}
+
+// Returns strings because these become URL query params on the TMDB request.
+export function toDiscoverParams(query: Query, today: Date = new Date()): Record<string, string> {
+  const sort: { sortBy: string; minVotes?: number } = SORT_OPTIONS[query.sort];
+  const params: Record<string, string> = {
+    sort_by: sort.sortBy,
+    include_adult: "false",
+    language: "en-US",
+  };
+
+  if (sort.minVotes) params["vote_count.gte"] = String(sort.minVotes);
+
+  // "Newest" should mean released, not announced for 2031.
+  if (query.sort === "newest") {
+    params["primary_release_date.lte"] = today.toISOString().slice(0, 10);
+  }
+
+  if (query.genre !== null) params.with_genres = String(query.genre);
+
+  return params;
+}
