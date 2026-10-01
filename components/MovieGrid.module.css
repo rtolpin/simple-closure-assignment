@@ -11,3 +11,11 @@
     gap: 12px;
   }
 }
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 900px;
+}

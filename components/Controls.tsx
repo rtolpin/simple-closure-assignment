@@ -2,7 +2,7 @@
 
 import Form from "next/form";
 import type { Genre } from "@/lib/tmdb";
-import { SORT_OPTIONS, type Query } from "@/lib/params";
+import { DEFAULT_VIEW, SORT_OPTIONS, type Query } from "@/lib/params";
 import styles from "./Controls.module.css";
 
 type Props = {
@@ -39,6 +39,8 @@ export function Controls({ query, genres }: Props) {
           ))}
         </select>
       </label>
+
+      {query.view !== DEFAULT_VIEW && <input type="hidden" name="view" value={query.view} />}
 
       <noscript>
         <button type="submit" className={styles.select}>

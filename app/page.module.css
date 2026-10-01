@@ -23,3 +23,10 @@
   color: var(--muted);
   margin-top: 4px;
 }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+}

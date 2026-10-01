@@ -108,6 +108,52 @@
   font-weight: 600;
 }
 
+/* List layout: poster on the left, details and synopsis on the right. */
+.row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+}
+
+.row:hover,
+.row:focus-visible {
+  transform: translateX(4px);
+}
+
+.row .info {
+  padding: 14px 18px;
+}
+
+.row .name {
+  font-size: 1.1rem;
+  white-space: normal;
+}
+
+.row .meta {
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.listOverview {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .listOverview {
+    -webkit-line-clamp: 2;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card,
   .image,
@@ -117,6 +163,8 @@
 
   .card:hover,
   .card:focus-visible,
+  .row:hover,
+  .row:focus-visible,
   .card:hover .image,
   .card:focus-visible .image {
     transform: none;
